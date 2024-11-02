@@ -2,6 +2,7 @@ import math
 import random
 import time
 
+# hi
 
 squares = input("Enter number of squares in each row (put a space in between each number): ")
 
