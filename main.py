@@ -2,13 +2,14 @@ import math
 import random
 import time
 
-# hi
 
 squares = input("Enter number of squares in each row (put a space in between each number): ")
 
 squares_array = []
 binary_array = []
 
+# turn : determines the turn; true if players turn and false if computer turn
+turn = True 
 def squares_picture(number_string):
     
    # Split the string into individual numbers
@@ -25,12 +26,14 @@ def squares_picture(number_string):
 
 squares_picture(squares)
 
+# determines the xor value of an array
 def xor(array):
     xor_value = 0
     for i in range(len(array)):
         xor_value = xor_value ^ array[i]
     return xor_value
 
+# xor value of the binary array
 xor_value = xor(binary_array)
 
 
@@ -47,23 +50,28 @@ def recommended_move():
                 new_number = ((binary_array[i]) ^ xor_value)
                 return ("Recommended: Take " + str((int(str(number),2)) - (int(str(new_number),2))) + " Square(s) from Row " + str(i+1))
 
-
 while (any(squares_array)):
-    if (xor_value != 0):
+    if (turn):
         print("\nPlayer Turn")
-        print(recommended_move())
-        row = input("What row would you like to take from? ")
-        num_of_squares = input("How many squares from this row? ")
+        if (xor_value != 0):
+            print(recommended_move())
+        else: 
+            print("No Recommended Move at This Point")
+        row = int(input("What row would you like to take from? "))
+        num_of_squares = int(input("How many squares from this row? "))
         new_list_string = ""
         for i in range(len(squares_array)):
             if (i != int(row) - 1):
                 new_list_string = new_list_string + str(squares_array[i]) + " "
             else:
-                new_list_string = new_list_string + str(squares_array[i]-int(num_of_squares)) + " "
+                new_list_string = new_list_string + str(squares_array[i]-num_of_squares) + " "
         squares_array = []
         binary_array = []
         squares_picture(new_list_string)
         xor_value = xor(binary_array)
+        turn = False
+        if not(any(squares_array)):
+            print("Player won")
     else:
         print("\nComputer Turn")
         print("Thinking...")
@@ -83,5 +91,6 @@ while (any(squares_array)):
         binary_array = []
         squares_picture(new_list_string)
         xor_value = xor(binary_array)
-
-print("Player won")
+        turn = True
+        if not(any(squares_array)):
+            print("Computer won")
