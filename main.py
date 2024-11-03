@@ -21,9 +21,6 @@ def squares_picture(number_string):
        print('X' * count)   # Print 'X' repeated 'count' times
        squares_array.append(count)
        binary_array.append(int(bin(count)[2:]))
-   print (squares_array)
-   print (binary_array)
-
 squares_picture(squares)
 
 # determines the xor value of an array
@@ -50,6 +47,19 @@ def recommended_move():
                 new_number = ((binary_array[i]) ^ xor_value)
                 return ("Recommended: Take " + str((int(str(number),2)) - (int(str(new_number),2))) + " Square(s) from Row " + str(i+1))
 
+def pick_row():
+    row = int(input("What row would you like to take from? "))
+    while (row > len(squares_array) or squares_array[row - 1] == 0):
+        row = int(input("No squares left in this row or invalid row, pick again: "))
+    return row
+
+def pick_num_of_squares(row):
+    num_of_squares = int(input("How many squares from this row? "))
+    while (squares_array[row - 1] < num_of_squares):
+        num_of_squares = int(input("Not enough squares left in this row, pick again: "))
+    return num_of_squares
+
+
 while (any(squares_array)):
     if (turn):
         print("\nPlayer Turn")
@@ -57,11 +67,11 @@ while (any(squares_array)):
             print(recommended_move())
         else: 
             print("No Recommended Move at This Point")
-        row = int(input("What row would you like to take from? "))
-        num_of_squares = int(input("How many squares from this row? "))
+        row = pick_row() 
+        num_of_squares = pick_num_of_squares(row) 
         new_list_string = ""
         for i in range(len(squares_array)):
-            if (i != int(row) - 1):
+            if (i != row - 1):
                 new_list_string = new_list_string + str(squares_array[i]) + " "
             else:
                 new_list_string = new_list_string + str(squares_array[i]-num_of_squares) + " "
@@ -94,3 +104,6 @@ while (any(squares_array)):
         turn = True
         if not(any(squares_array)):
             print("Computer won")
+
+
+
