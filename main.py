@@ -49,7 +49,7 @@ def pick_row():
 # Ensures user picks valid number of squares to remove
 def pick_num_of_squares(row):
     num_of_squares = int(input("How many squares from this row? "))
-    while (squares_array[row - 1] < num_of_squares):
+    while (num_of_squares == 0  or squares_array[row - 1] < num_of_squares):
         num_of_squares = int(input("Not enough squares left in this row, pick again: "))
     return num_of_squares
 
