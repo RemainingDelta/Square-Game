@@ -29,16 +29,6 @@ def xor(array):
         xor_value = xor_value ^ array[i] # xor each value of the array with the xor_value of the previous values
     return xor_value # Return xor_value 
 
-# If the xor_value is not 0, then give recommended move
-def recommended_move():
-    leftmost_1_index = math.floor(math.log(xor_value, 10)) # Finds the index with the leftmost 1
-    number_to_change = 0
-    for i in range(len(binary_array)): # Loop through each element of binary_element
-        if (math.floor ((binary_array[i] / (math.pow (10,leftmost_1_index)))) % 10) == 1: # Looking for the first element in binary_element that has a 1 in the leftmost_1_index
-            number_to_change = (binary_array[i]) # Set number_to_change to that number
-            new_number = (number_to_change ^ xor_value) # Set new_number to the number_to_change xor xor_value
-            return ("Recommended: Take " + str((int(str(number_to_change),2)) - (int(str(new_number),2))) + " Square(s) from Row " + str(i+1)) # Recommend move based on the number_to_change and new_number
-
 # Ensures user picks valid row
 def pick_row():
     row = int(input("What row would you like to take from? "))
@@ -52,6 +42,28 @@ def pick_num_of_squares(row):
     while (num_of_squares == 0  or squares_array[row - 1] < num_of_squares):
         num_of_squares = int(input("Not enough squares left in this row, pick again: "))
     return num_of_squares
+
+# Gives row for optimal move 
+def smart_row():
+    leftmost_1_index = math.floor(math.log(xor_value, 10)) # Finds the index with the leftmost 1
+    number_to_change = 0
+    for i in range(len(binary_array)): # Loop through each element of binary_element
+        if (math.floor ((binary_array[i] / (math.pow (10,leftmost_1_index)))) % 10) == 1: # Looking for the first element in binary_element that has a 1 in the leftmost_1_index
+            return (i+1) # Recommend move based on the number_to_change and new_number
+
+# Gives squares for optimal move 
+def smart_squares():
+    leftmost_1_index = math.floor(math.log(xor_value, 10)) # Finds the index with the leftmost 1
+    number_to_change = 0
+    for i in range(len(binary_array)): # Loop through each element of binary_element
+        if (math.floor ((binary_array[i] / (math.pow (10,leftmost_1_index)))) % 10) == 1: # Looking for the first element in binary_element that has a 1 in the leftmost_1_index
+            number_to_change = (binary_array[i]) # Set number_to_change to that number
+            new_number = (number_to_change ^ xor_value) # Set new_number to the number_to_change xor xor_value
+            return (int(str(number_to_change),2)) - (int(str(new_number),2)) # Recommend move based on the number_to_change and new_number
+
+# If the xor_value is not 0, then give recommended move
+def recommended_move():
+    return ("Recommended: Take " + str(smart_squares()) + " Square(s) from Row " + str(smart_row())) # Recommend move based on the number_to_change and new_number
 
 # Plays the square game
 def squares_game():
@@ -81,10 +93,14 @@ def squares_game():
         else:
             print("\nComputer Turn\nThinking...")
             time.sleep(1) 
-            row = random.randint(1, len(squares_array)) # Set row to random row
-            while squares_array[row - 1] == 0:  # While the row in square_array is 0, continue choosing a random row until it finds one that isn't 0
-                row = random.randint(1, len(squares_array))  
-            num_of_squares = random.randint(1, squares_array[row - 1]) # Set num_of_squares to a random number of squares in from this row
+            if (xor_value != 0): # If xor_value is not 0, then print(recommended_move()) 
+                row = smart_row() # row is equal to a valid row that the user picks
+                num_of_squares = smart_squares() # num_of_squares is equal to a valid number of squares to remove that the user picks
+            else:
+                row = random.randint(1, len(squares_array)) # Set row to random row
+                while squares_array[row - 1] == 0:  # While the row in square_array is 0, continue choosing a random row until it finds one that isn't 0
+                    row = random.randint(1, len(squares_array))  
+                num_of_squares = random.randint(1, squares_array[row - 1]) # Set num_of_squares to a random number of squares in from this row
             print("Took " + str(num_of_squares) + " Square(s) from Row " + str(row)) # Print Computer's move
             new_string_of_numbers = ""
             for i in range(len(squares_array)): # Loop through squares_array
